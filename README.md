@@ -72,7 +72,7 @@ COHERE_API_KEY=your-cohere-api-key
 ## ▶️ Run Locally
 
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn main:app --reload 
 ```
 
 Visit the API docs: [http://localhost:8000/docs](http://localhost:8000/docs)
