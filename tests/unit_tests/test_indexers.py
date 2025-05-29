@@ -7,7 +7,7 @@ import numpy as np
 from app.models.schema import Chunk
 from app.indexers.bruteforce import BruteForceIndexer
 from app.indexers.vptree import VPTreeIndexer
-from app.indexers.kdtree import KDTreeIndexer  # <-- new import
+
 
 @pytest.fixture
 def chunks():

@@ -87,57 +87,85 @@ docker-compose up --build
 
 ---
 
-## 🔍 Indexing Algorithms and Architecture Design
+## 🔍 Detailed Explanation of Indexing Algorithms
 
 ### 📌 BruteForceIndexer
 
-**How it works**  
-- Stores all chunk embeddings in a flat list.  
-- On search: compute distance between query vector and each stored vector, then return top-k closest.
+**Overview**  
+BruteForceIndexer is a simple and exact K-Nearest Neighbors (KNN) implementation that computes cosine similarity between a query vector and all stored embeddings. It is best suited for small or medium-sized datasets where latency is less of a concern.
+
+**How It Works**  
+1. All chunks are stored in a flat list.
+2. When a query is received:
+   - Cosine similarity is computed between the query embedding and each stored embedding.
+   - These similarities are stored as (chunk, similarity) pairs.
+   - A max-heap (`heapq.nlargest`) is used to retrieve the top-k most similar chunks efficiently.
+
+**Cosine Similarity Formula**  
+\[
+\text{cosine}(a, b) = \frac{\sum a_i b_i}{\sqrt{\sum a_i^2} \cdot \sqrt{\sum b_i^2}}
+\]
 
 **Time Complexity**  
-- **Build**: O(1) — no preprocessing, just append vectors.  
-- **Query**: O(N·D + N log k)  
-  - O(N·D): distance computation  
-  - O(N log k): maintaining a size-k max-heap  
+- **Build**: `O(1)` — simple list assignment.
+- **Query**: `O(N·D + N log k)`
+  - `O(N·D)` for cosine similarity computation
+  - `O(N log k)` for maintaining a heap of size `k`
 
 **Space Complexity**  
-- O(N·D) for embeddings  
-- O(N) for metadata (IDs, etc.)
+- `O(N·D)` to store all embeddings
+- `O(N)` for storing metadata like IDs
 
 **Trade-offs**  
-✅ Exact results  
-✅ Simple dynamic insert/delete  
-❌ Poor scalability (query latency grows with N)
+✅ Simple and exact  
+✅ Supports dynamic inserts/deletes  
+❌ Poor scalability due to linear scan of all embeddings during query
+
 
 ---
 
 ### 🌲 VPTreeIndexer
 
-**How it works**
+**Overview**  
+VPTreeIndexer is an exact KNN algorithm based on a Vantage Point Tree (VP-Tree), which is optimized for fast nearest neighbor search using Euclidean distance. It is ideal for static datasets where insertions and deletions are rare.
 
-**Build**  
-- Choose a random Vantage Point (VP)  
-- Compute distances to all others, find median distance as radius  
-- Recurse left (within radius) and right (outside radius)  
+**How It Works**  
 
-**Query**  
-- At each node, compute distance to VP  
-- Recurse into likely subtree using triangle inequality for pruning  
+**Build Phase**  
+1. Randomly select a data point as the Vantage Point (VP).
+2. Compute Euclidean distances from the VP to all other points.
+3. Use the median of these distances as a threshold (radius).
+4. Partition the dataset into:
+   - Left subtree: points within the radius
+   - Right subtree: points outside the radius
+5. Recursively repeat the process to build the tree.
+
+**Query Phase**  
+1. Start at the root node and compute the distance from the query to the VP.
+2. Recursively search the subtree (left or right) that the query falls into.
+3. Use the triangle inequality to prune unnecessary branches.
+4. Maintain a max-heap of the current top-k closest results.
+
+**Euclidean Distance Formula**  
+\[
+\text{euclidean}(a, b) = \sqrt{\sum (a_i - b_i)^2}
+\]
 
 **Time Complexity**  
-- **Build**: O(N log N) (on average)  
-- **Query**: O(log N · D) average, O(N · D) worst-case  
+- **Build**: `O(N log N)` on average (due to recursive median partitioning)
+- **Query**:
+  - Average: `O(log N · D)` if pruning is effective
+  - Worst case: `O(N · D)` if no pruning occurs
 
 **Space Complexity**  
-- O(N·D) for embeddings  
-- O(N) for VP tree nodes  
+- `O(N·D)` for embeddings
+- `O(N)` for storing the tree nodes (each node contains one VP and radius)
 
 **Trade-offs**  
-✅ Efficient query for static datasets  
-❌ Poor dynamic support (insert/delete = rebuild)  
-❌ High upfront build cost
-
+✅ Faster than brute-force for queries  
+✅ Exact results using Euclidean distance  
+❌ No easy support for dynamic updates  
+❌ More complex to implement and maintain
 ---
 
 ## 💡 Design & Architecture
