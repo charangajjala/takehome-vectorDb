@@ -1,0 +1,10 @@
+# environment.yml
+name: vector_db_api
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip          # make sure pip is available
+  - pip:
+    - -r requirements.txt
+

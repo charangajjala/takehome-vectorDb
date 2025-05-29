@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+
+    command: >
+      uvicorn app.main:app
+        --host ${APP_HOST}
+        --port ${APP_PORT}
+        --reload
+    volumes:
+      - ./:/app

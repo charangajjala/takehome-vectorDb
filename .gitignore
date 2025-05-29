@@ -1,0 +1,82 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pydantic cache (for v2)
+.pydantic/
+
+# Pyre type checker
+.pyre/
+
+# IDEs
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Mac OS
+.DS_Store
+
+# Linux/Mac system files
+*.swp
+
+# Test artifacts
+test-results/
+tests/__pycache__/
+tests/**/*.pyc
+
+# Build files
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Docker
+docker-compose.override.yml
+*.env
+.env.*
+
+# App specific
+logs/
+*.db
+__snapshots__/
+tmp/
+
+# Ignore local dev artifacts
+.local/
+*.bak
+*.old
+*.orig
+*.log
