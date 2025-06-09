@@ -1,4 +1,4 @@
-# VectorDB API - Take-Home Assignment
+# VectorDB API
 
 This project is a lightweight vector database API built with FastAPI. It supports creating libraries, uploading documents, extracting chunks, and performing similarity search using different indexing strategies.
 
